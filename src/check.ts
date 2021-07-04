@@ -117,7 +117,13 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             await this.cancelCheck(client, checkRunId, options);
             return new Err(`${error}`);
         }
-        return new Ok(undefined);
+        if (this.isSuccessCheck()) {
+            return new Ok(undefined);
+        } else {
+            return new Err(
+                `rustfmt check found unformatted ${this.stats.count} codes in ${this.stats.file} files.`,
+            );
+        }
     }
 
     private async runUpdateCheck(
@@ -290,7 +296,17 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             end_line: contents.original_begin_line,
             annotation_level: 'warning',
             title: 'rustfmt check',
-            message: '```suggestion\n' + `${contents.expected}` + '\n```',
+            message:
+                '```diff\n' +
+                `${contents.original
+                    .split('\n')
+                    .map(line => '-' + line)
+                    .join('\n')}` +
+                `${contents.expected
+                    .split('\n')
+                    .map(line => '+' + line)
+                    .join('\n')}` +
+                '\n```',
         };
 
         // Omit these parameters if `start_line` and `end_line` have different values.

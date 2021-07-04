@@ -4,8 +4,9 @@ import * as github from '@actions/github';
 
 import * as input from './input';
 import * as check from './check';
+import { Result } from './result';
 
-export async function run(actionInput: input.Input): Promise<void> {
+export async function run(actionInput: input.Input): Promise<Result<void, string>> {
     const startedAt = new Date().toISOString();
 
     let rustcVersion = '';
@@ -40,13 +41,10 @@ export async function run(actionInput: input.Input): Promise<void> {
         .forEach(flag => flags.push(flag));
 
     let options: string[] = [];
-    actionInput.options
-        .forEach(option => options.push(option));
+    actionInput.options.forEach(option => options.push(option));
 
     let args: string[] = [];
-    actionInput.args
-        .filter(flag => !flag.startsWith('--check'))
-        .forEach(arg => args.push(arg));
+    actionInput.args.filter(flag => !flag.startsWith('--check')).forEach(arg => args.push(arg));
 
     let rustfmtOutput: string = '';
     try {
@@ -82,15 +80,14 @@ export async function run(actionInput: input.Input): Promise<void> {
             rustfmt: rustfmtVersion,
         },
     });
-    if (res.type == 'failure') {
-        throw res.unwrap_err();
-    }
+    return res;
 }
 
 async function main(): Promise<void> {
     try {
         const actionInput = input.get();
-        await run(actionInput);
+        const res = await run(actionInput);
+        res.expect(e => `${e}`);
     } catch (error) {
         core.setFailed(`${error}`);
     }

@@ -7457,7 +7457,7 @@ module.exports = eval("require")("encoding");
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"rustfmt-check","version":"0.1.0","description":"","main":"index.js","scripts":{"test":"echo \\"Error: no test specified\\" && exit 1"},"keywords":[],"author":"","license":"ISC","bugs":{"url":"https://github.com/LoliGothick/rustfmt-check/issues"},"devDependencies":{"@types/core-js":"^2.5.4","@types/node":"^15.14.0","@typescript-eslint/eslint-plugin":"^4.28.1","@typescript-eslint/parser":"^4.28.1","@vercel/ncc":"^0.28.6","eslint":"^7.29.0","eslint-config-prettier":"^8.3.0","eslint-plugin-prettier":"^3.4.0","prettier":"^2.3.2","ts-node":"^10.0.0","typescript":"^4.3.5"},"dependencies":{"@actions/core":"^1.4.0","@actions/exec":"^1.1.0","@actions/github":"^5.0.0","@octokit/webhooks":"^9.8.4","string-argv":"^0.3.1"}}');
+module.exports = JSON.parse('{"name":"rustfmt-check","version":"0.1.0","description":"","main":"index.js","scripts":{"test":"echo \\"Error: no test specified\\" && exit 1","lint":"eslint src/main.ts","lint:fix":"eslint --fix src/main.ts"},"keywords":[],"author":"","license":"ISC","bugs":{"url":"https://github.com/LoliGothick/rustfmt-check/issues"},"devDependencies":{"@types/core-js":"^2.5.4","@types/node":"^15.14.0","@typescript-eslint/eslint-plugin":"^4.28.1","@typescript-eslint/parser":"^4.28.1","@vercel/ncc":"^0.28.6","eslint":"^7.29.0","eslint-config-prettier":"^8.3.0","eslint-plugin-prettier":"^3.4.0","prettier":"^2.3.2","ts-node":"^10.0.0","typescript":"^4.3.5"},"dependencies":{"@actions/core":"^1.4.0","@actions/exec":"^1.1.0","@actions/github":"^5.0.0","@octokit/webhooks":"^9.8.4","string-argv":"^0.3.1"}}');
 
 /***/ }),
 
@@ -7735,7 +7735,7 @@ class Err {
     }
     expect(msg) {
         if (typeof msg === 'string') {
-            throw msg;
+            throw Error(msg);
         }
         else {
             throw Error(msg(this.value));
@@ -7824,7 +7824,12 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             await this.cancelCheck(client, checkRunId, options);
             return new Err(`${error}`);
         }
-        return new Ok(undefined);
+        if (this.isSuccessCheck()) {
+            return new Ok(undefined);
+        }
+        else {
+            return new Err(`rustfmt check found unformatted ${this.stats.count} codes in ${this.stats.file} files.`);
+        }
     }
     async runUpdateCheck(client, checkRunId, options) {
         let annotations = this.getBucket();
@@ -7952,7 +7957,16 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             end_line: contents.original_begin_line,
             annotation_level: 'warning',
             title: 'rustfmt check',
-            message: '```suggestion\n' + `${contents.expected}` + '\n```',
+            message: '```diff\n' +
+                `${contents.original
+                    .split('\n')
+                    .map(line => '-' + line)
+                    .join('\n')}` +
+                `${contents.expected
+                    .split('\n')
+                    .map(line => '+' + line)
+                    .join('\n')}` +
+                '\n```',
         };
         if (contents.original_begin_line == contents.original_begin_line) {
             annotation.start_column = 0;
@@ -8000,12 +8014,9 @@ async function run(actionInput) {
         .filter(flag => !flag.startsWith('--message-format'))
         .forEach(flag => flags.push(flag));
     let options = [];
-    actionInput.options
-        .forEach(option => options.push(option));
+    actionInput.options.forEach(option => options.push(option));
     let args = [];
-    actionInput.args
-        .filter(flag => !flag.startsWith('--check'))
-        .forEach(arg => args.push(arg));
+    actionInput.args.filter(flag => !flag.startsWith('--check')).forEach(arg => args.push(arg));
     let rustfmtOutput = '';
     try {
         core.startGroup('Executing cargo fmt (JSON output)');
@@ -8040,14 +8051,13 @@ async function run(actionInput) {
             rustfmt: rustfmtVersion,
         },
     });
-    if (res.type == 'failure') {
-        throw res.unwrap_err();
-    }
+    return res;
 }
 async function main() {
     try {
         const actionInput = get();
-        await run(actionInput);
+        const res = await run(actionInput);
+        res.expect(e => `${e}`);
     }
     catch (error) {
         core.setFailed(`${error}`);

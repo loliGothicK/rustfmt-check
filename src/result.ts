@@ -44,7 +44,7 @@ export class Err<T, E> {
     }
     expect(msg: (err: E) => string | string): never {
         if (typeof msg === 'string') {
-            throw msg;
+            throw Error(msg);
         } else {
             throw Error(msg(this.value));
         }
