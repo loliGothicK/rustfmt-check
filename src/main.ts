@@ -33,6 +33,7 @@ export async function run(actionInput: input.Input): Promise<Result<void, string
 
     let flags = ['--message-format=json'];
     actionInput.flags
+        .filter(flag => !flag.startsWith('--check'))
         .filter(flag => !flag.startsWith('--message-format'))
         .forEach(flag => flags.push(flag));
 
@@ -40,7 +41,7 @@ export async function run(actionInput: input.Input): Promise<Result<void, string
     actionInput.options.forEach(option => options.push(option));
 
     let args: string[] = [];
-    actionInput.args.filter(flag => !flag.startsWith('--check')).forEach(arg => args.push(arg));
+    actionInput.args.filter(arg => !arg.startsWith('--check')).forEach(arg => args.push(arg));
 
     let rustfmtOutput: string = '';
     try {
