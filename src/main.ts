@@ -18,13 +18,13 @@ export async function run(actionInput: input.Input): Promise<void> {
             stdout: (buffer: Buffer) => (rustcVersion = buffer.toString().trim()),
         },
     });
-    await cargo.exec('cargo', ['-V'], {
+    await exec.exec('cargo', ['-V'], {
         silent: true,
         listeners: {
             stdout: (buffer: Buffer) => (cargoVersion = buffer.toString().trim()),
         },
     });
-    await cargo.exec('rustfmt', ['-V'], {
+    await exec.exec('rustfmt', ['-V'], {
         silent: true,
         listeners: {
             stdout: (buffer: Buffer) => (rustfmtVersion = buffer.toString().trim()),
