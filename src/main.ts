@@ -44,13 +44,12 @@ export async function run(actionInput: input.Input): Promise<void> {
     actionInput.options.forEach(option => options.push(option));
 
     let args = ['--check'];
-    actionInput.args.filter(flag => '--check' !== flag).forEach(option => options.push(option));
+    actionInput.args.filter(flag => '--check' !== flag).forEach(arg => args.push(arg));
 
     let rustfmtOutput: string = '';
     try {
         core.startGroup('Executing cargo fmt (JSON output)');
         const res = await cargo.exec('fmt', [...flags, ...options, '--', ...args], {
-            failOnStdErr: false,
             listeners: {
                 stdout: (buffer: Buffer) => (rustfmtOutput = buffer.toString()),
             },
