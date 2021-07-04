@@ -55,10 +55,6 @@ export class CheckRunner {
     }
 
     public async check(outputs: Output[], options: CheckOptions): Promise<Result<void, string>> {
-        // pretty
-        if (outputs.length === 0) {
-            return new Ok(undefined);
-        }
         outputs.forEach(out => {
             const filename = out.name;
             this.stats.file += 1;
@@ -107,22 +103,20 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             }
         }
 
-        try {
-            if (this.isSuccessCheck()) {
-                await this.successCheck(client, checkRunId, options);
-            } else {
-                await this.runUpdateCheck(client, checkRunId, options);
-            }
-        } catch (error) {
-            await this.cancelCheck(client, checkRunId, options);
-            return new Err(`${error}`);
-        }
-        if (this.isSuccessCheck()) {
+        if (outputs.length === 0) {
+            await this.successCheck(client, checkRunId, options);
             return new Ok(undefined);
-        } else {
-            return new Err(
-                `rustfmt check found unformatted ${this.stats.count} codes in ${this.stats.file} files.`,
-            );
+        }
+        else {
+            try {
+                await this.runUpdateCheck(client, checkRunId, options);
+                return new Err(
+                    `rustfmt check found unformatted ${this.stats.count} codes in ${this.stats.file} files.`,
+                );
+            } catch (error) {
+                await this.cancelCheck(client, checkRunId, options);
+                return new Err(`${error}`);
+            }
         }
     }
 
@@ -282,13 +276,9 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
         }
     }
 
-    private isSuccessCheck(): boolean {
-        return this.stats.file == 0 && this.stats.count == 0;
-    }
-
     /// Convert parsed JSON line into the GH annotation object
     ///
-    /// https://developer.github.com/v3/checks/runs/#annotations-object
+    /// https://docs.github.com/en/rest/reference/checks#update-a-check-run
     static makeAnnotation(path: string, contents: Mismatch): ChecksCreateParamsOutputAnnotations {
         let annotation: ChecksCreateParamsOutputAnnotations = {
             path: path,
