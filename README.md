@@ -18,7 +18,7 @@ format:
               token: ${{ secrets.GITHUB_TOKEN }}
               flags: -all
               options: --manifest-path=Cargo.toml
-              args: --check --config-path=rustfmt.toml
+              args: --config-path=rustfmt.toml
 ```
 
 ## Inputs
