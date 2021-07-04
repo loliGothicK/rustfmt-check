@@ -8005,7 +8005,7 @@ async function run(actionInput) {
     let options = [];
     actionInput.options
         .forEach(option => options.push(option));
-    let args = ['--check'];
+    let args = [];
     actionInput.args
         .filter(flag => !flag.startsWith('--check'))
         .forEach(arg => args.push(arg));
