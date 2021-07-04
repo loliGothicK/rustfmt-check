@@ -7457,7 +7457,7 @@ module.exports = eval("require")("encoding");
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"rustfmt-check","version":"0.1.0","description":"","main":"index.js","scripts":{"test":"echo \\"Error: no test specified\\" && exit 1","lint":"eslint src/main.ts","lint:fix":"eslint --fix src/main.ts"},"keywords":[],"author":"","license":"ISC","bugs":{"url":"https://github.com/LoliGothick/rustfmt-check/issues"},"devDependencies":{"@types/core-js":"^2.5.4","@types/node":"^15.14.0","@typescript-eslint/eslint-plugin":"^4.28.1","@typescript-eslint/parser":"^4.28.1","@vercel/ncc":"^0.28.6","eslint":"^7.29.0","eslint-config-prettier":"^8.3.0","eslint-plugin-prettier":"^3.4.0","prettier":"^2.3.2","ts-node":"^10.0.0","typescript":"^4.3.5"},"dependencies":{"@actions/core":"^1.4.0","@actions/exec":"^1.1.0","@actions/github":"^5.0.0","@octokit/webhooks":"^9.8.4","string-argv":"^0.3.1"}}');
+module.exports = JSON.parse('{"name":"rustfmt-check","version":"0.1.0","description":"","main":"index.js","scripts":{"test":"echo \\"Error: no test specified\\" && exit 1","lint":"eslint src/main.ts","lint:fix":"eslint --fix src/main.ts"},"keywords":[],"author":"","license":"ISC","bugs":{"url":"https://github.com/LoliGothick/rustfmt-check/issues"},"devDependencies":{"@types/core-js":"^2.5.4","@types/node":"^15.14.0","@typescript-eslint/eslint-plugin":"^4.28.1","@typescript-eslint/parser":"^4.28.1","@vercel/ncc":"^0.28.6","eslint":"^7.29.0","eslint-config-prettier":"^8.3.0","eslint-plugin-prettier":"^3.4.0","prettier":"^2.3.2","ts-node":"^10.0.0","typescript":"^4.3.5"},"dependencies":{"@actions/core":"^1.4.0","@actions/exec":"^1.1.0","@actions/github":"^5.0.0","string-argv":"^0.3.1"}}');
 
 /***/ }),
 
@@ -7767,9 +7767,6 @@ class CheckRunner {
         };
     }
     async check(outputs, options) {
-        if (outputs.length === 0) {
-            return new Ok(undefined);
-        }
         outputs.forEach(out => {
             const filename = out.name;
             this.stats.file += 1;
@@ -7812,23 +7809,19 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
                 return new Err(`${error}`);
             }
         }
-        try {
-            if (this.isSuccessCheck()) {
-                await this.successCheck(client, checkRunId, options);
-            }
-            else {
-                await this.runUpdateCheck(client, checkRunId, options);
-            }
-        }
-        catch (error) {
-            await this.cancelCheck(client, checkRunId, options);
-            return new Err(`${error}`);
-        }
-        if (this.isSuccessCheck()) {
+        if (outputs.length === 0) {
+            await this.successCheck(client, checkRunId, options);
             return new Ok(undefined);
         }
         else {
-            return new Err(`rustfmt check found unformatted ${this.stats.count} codes in ${this.stats.file} files.`);
+            try {
+                await this.runUpdateCheck(client, checkRunId, options);
+                return new Err(`rustfmt check found unformatted ${this.stats.count} codes in ${this.stats.file} files.`);
+            }
+            catch (error) {
+                await this.cancelCheck(client, checkRunId, options);
+                return new Err(`${error}`);
+            }
         }
     }
     async runUpdateCheck(client, checkRunId, options) {
@@ -7946,9 +7939,6 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
         else {
             return 'success';
         }
-    }
-    isSuccessCheck() {
-        return this.stats.file == 0 && this.stats.count == 0;
     }
     static makeAnnotation(path, contents) {
         let annotation = {
