@@ -7852,7 +7852,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
                 req.conclusion = conclusion;
                 req.completed_at = new Date().toISOString();
             }
-            await client.checks.update(req);
+            await client.rest.checks.update(req);
             annotations = this.getBucket();
         }
         return;
@@ -7872,7 +7872,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
                 text: this.getText(options.context),
             },
         };
-        await client.checks.update(req);
+        await client.rest.checks.update(req);
         return;
     }
     async cancelCheck(client, checkRunId, options) {
@@ -7890,7 +7890,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
                 text: 'Check was cancelled due to unhandled error. Check the Action logs for details.',
             },
         };
-        await client.checks.update(req);
+        await client.rest.checks.update(req);
         return;
     }
     dumpToStdout() {

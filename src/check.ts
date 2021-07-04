@@ -159,7 +159,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             }
 
             // TODO: Check for errors
-            await client.checks.update(req);
+            await client.rest.checks.update(req);
 
             annotations = this.getBucket();
         }
@@ -188,7 +188,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
         };
 
         // TODO: Check for errors
-        await client.checks.update(req);
+        await client.rest.checks.update(req);
 
         return;
     }
@@ -215,7 +215,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
         };
 
         // TODO: Check for errors
-        await client.checks.update(req);
+        await client.rest.checks.update(req);
 
         return;
     }
