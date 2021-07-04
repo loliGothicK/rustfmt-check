@@ -7671,8 +7671,28 @@ var core = __nccwpck_require__(2186);
 var exec = __nccwpck_require__(1514);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(5438);
+// EXTERNAL MODULE: ./node_modules/string-argv/index.js
+var string_argv = __nccwpck_require__(9453);
+;// CONCATENATED MODULE: ./src/input.ts
+
+
+function get() {
+    const token = core.getInput('token', { required: true });
+    const flags = (0,string_argv/* default */.ZP)(core.getInput('flags', { required: false }));
+    const options = (0,string_argv/* default */.ZP)(core.getInput('options', { required: false }));
+    const args = (0,string_argv/* default */.ZP)(core.getInput('args', { required: false }));
+    const name = core.getInput('name', { required: false });
+    return {
+        token,
+        flags,
+        options,
+        args,
+        name,
+    };
+}
+
 ;// CONCATENATED MODULE: ./src/result.ts
-class result_Ok {
+class Ok {
     constructor(value) {
         this.value = value;
         this.type = 'success';
@@ -7693,10 +7713,10 @@ class result_Ok {
         return this.value;
     }
     map(f) {
-        return new result_Ok(f(this.value));
+        return new Ok(f(this.value));
     }
 }
-class result_Err {
+class Err {
     constructor(value) {
         this.value = value;
         this.type = 'failure';
@@ -7722,52 +7742,8 @@ class result_Err {
         }
     }
     map(_) {
-        return new result_Err(this.value);
+        return new Err(this.value);
     }
-}
-
-;// CONCATENATED MODULE: ./src/cargo.ts
-
-
-async function install(packages) {
-    let exit_code = await act_exec.exec('cargo', packages, {
-        silent: true,
-    });
-    if (exit_code === 0) {
-        return new Ok(undefined);
-    }
-    else {
-        return new Err(exit_code);
-    }
-}
-async function cargo_exec(component, args, options) {
-    let exit_code = await exec.exec('cargo', [component, ...args], options);
-    if (exit_code === 0) {
-        return new result_Ok(undefined);
-    }
-    else {
-        return new result_Err(exit_code);
-    }
-}
-
-// EXTERNAL MODULE: ./node_modules/string-argv/index.js
-var string_argv = __nccwpck_require__(9453);
-;// CONCATENATED MODULE: ./src/input.ts
-
-
-function get() {
-    const token = core.getInput('token', { required: true });
-    const flags = (0,string_argv/* default */.ZP)(core.getInput('flags', { required: false }));
-    const options = (0,string_argv/* default */.ZP)(core.getInput('options', { required: false }));
-    const args = (0,string_argv/* default */.ZP)(core.getInput('args', { required: false }));
-    const name = core.getInput('name', { required: false });
-    return {
-        token,
-        flags,
-        options,
-        args,
-        name,
-    };
 }
 
 ;// CONCATENATED MODULE: ./src/render.ts
@@ -7792,7 +7768,7 @@ class CheckRunner {
     }
     async check(outputs, options) {
         if (outputs.length === 0) {
-            return new result_Ok(undefined);
+            return new Ok(undefined);
         }
         outputs.forEach(out => {
             const filename = out.name;
@@ -7812,7 +7788,7 @@ class CheckRunner {
         catch (error) {
             if (process.env.GITHUB_HEAD_REF) {
                 core.error(`Unable to create clippy annotations! Reason: ${error}`);
-                core.warning("It seems that this Action is executed from the forked repository.");
+                core.warning('It seems that this Action is executed from the forked repository.');
                 core.warning(`GitHub Actions are not allowed to create Check annotations, \
 when executed for a forked repos. \
 See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
@@ -7822,11 +7798,11 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
                     throw new Error('Exiting due to clippy errors');
                 }
                 else {
-                    return new result_Ok(undefined);
+                    return new Ok(undefined);
                 }
             }
             else {
-                return new result_Err(`${error}`);
+                return new Err(`${error}`);
             }
         }
         try {
@@ -7839,9 +7815,9 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
         }
         catch (error) {
             await this.cancelCheck(client, checkRunId, options);
-            return new result_Err(`${error}`);
+            return new Err(`${error}`);
         }
-        return new result_Ok(undefined);
+        return new Ok(undefined);
     }
     async createCheck(client, options) {
         const response = await client.checks.create({
@@ -7866,7 +7842,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
                     summary: this.getSummary(),
                     text: this.getText(options.context),
                     annotations: annotations,
-                }
+                },
             };
             if (this.annotations.length > 0) {
                 core.debug('This is not the last iteration, marking check as "in_progress"');
@@ -7897,7 +7873,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
                 title: options.name,
                 summary: this.getSummary(),
                 text: this.getText(options.context),
-            }
+            },
         };
         await client.checks.update(req);
         return;
@@ -7915,7 +7891,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
                 title: options.name,
                 summary: 'Unhandled error',
                 text: 'Check was cancelled due to unhandled error. Check the Action logs for details.',
-            }
+            },
         };
         await client.checks.update(req);
         return;
@@ -7979,7 +7955,7 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             end_line: contents.original_begin_line,
             annotation_level: 'warning',
             title: 'rustfmt check',
-            message: "```suggestion\n" + `${contents.expected}` + "\n```",
+            message: '```suggestion\n' + `${contents.expected}` + '\n```',
         };
         if (contents.original_begin_line == contents.original_begin_line) {
             annotation.start_column = 0;
@@ -7990,7 +7966,6 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
 }
 
 ;// CONCATENATED MODULE: ./src/main.ts
-
 
 
 
@@ -8008,13 +7983,13 @@ async function run(actionInput) {
             stdout: (buffer) => (rustcVersion = buffer.toString().trim()),
         },
     });
-    await cargo_exec('cargo', ['-V'], {
+    await exec.exec('cargo', ['-V'], {
         silent: true,
         listeners: {
             stdout: (buffer) => (cargoVersion = buffer.toString().trim()),
         },
     });
-    await cargo_exec('rustfmt', ['-V'], {
+    await exec.exec('rustfmt', ['-V'], {
         silent: true,
         listeners: {
             stdout: (buffer) => (rustfmtVersion = buffer.toString().trim()),
@@ -8025,22 +8000,26 @@ async function run(actionInput) {
     console.log(rustfmtVersion);
     let flags = ['--message-format=json'];
     actionInput.flags
-        .filter(flag => !RegExp('--message-format=.*').test(flag))
+        .filter(flag => !flag.startsWith('--message-format'))
         .forEach(flag => flags.push(flag));
     let options = [];
-    actionInput.options.forEach(option => options.push(option));
+    actionInput.options
+        .forEach(option => options.push(option));
     let args = ['--check'];
-    actionInput.args.filter(flag => '--check' !== flag).forEach(option => options.push(option));
+    actionInput.args
+        .filter(flag => !flag.startsWith('--check'))
+        .forEach(arg => args.push(arg));
     let rustfmtOutput = '';
     try {
         core.startGroup('Executing cargo fmt (JSON output)');
-        const res = await cargo_exec('fmt', [...flags, ...options, '--', ...args], {
-            failOnStdErr: false,
+        const exitCode = await exec.exec('cargo', ['fmt', ...flags, ...options, '--', ...args], {
             listeners: {
                 stdout: (buffer) => (rustfmtOutput = buffer.toString()),
             },
         });
-        res.expect(e => `Rustfmt had exited with the Exit Code ${e}`);
+        if (exitCode !== 0) {
+            throw new Error(`Rustfmt had exited with the Exit Code ${exitCode}`);
+        }
     }
     finally {
         core.endGroup();
@@ -8062,7 +8041,7 @@ async function run(actionInput) {
             rustc: rustcVersion,
             cargo: cargoVersion,
             rustfmt: rustfmtVersion,
-        }
+        },
     });
     if (res.type == 'failure') {
         throw res.unwrap_err();

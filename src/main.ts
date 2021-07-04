@@ -2,7 +2,6 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
-import * as cargo from './cargo';
 import * as input from './input';
 import * as check from './check';
 
@@ -37,24 +36,29 @@ export async function run(actionInput: input.Input): Promise<void> {
 
     let flags = ['--message-format=json'];
     actionInput.flags
-        .filter(flag => !RegExp('--message-format=.*').test(flag))
+        .filter(flag => !flag.startsWith('--message-format'))
         .forEach(flag => flags.push(flag));
 
     let options: string[] = [];
-    actionInput.options.forEach(option => options.push(option));
+    actionInput.options
+        .forEach(option => options.push(option));
 
     let args = ['--check'];
-    actionInput.args.filter(flag => '--check' !== flag).forEach(arg => args.push(arg));
+    actionInput.args
+        .filter(flag => !flag.startsWith('--check'))
+        .forEach(arg => args.push(arg));
 
     let rustfmtOutput: string = '';
     try {
         core.startGroup('Executing cargo fmt (JSON output)');
-        const res = await cargo.exec('fmt', [...flags, ...options, '--', ...args], {
+        const exitCode = await exec.exec('cargo', ['fmt', ...flags, ...options, '--', ...args], {
             listeners: {
                 stdout: (buffer: Buffer) => (rustfmtOutput = buffer.toString()),
             },
         });
-        res.expect(e => `Rustfmt had exited with the Exit Code ${e}`);
+        if (exitCode !== 0) {
+            throw new Error(`Rustfmt had exited with the Exit Code ${exitCode}`);
+        }
     } finally {
         core.endGroup();
     }
