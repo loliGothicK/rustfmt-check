@@ -8003,12 +8003,13 @@ async function run(actionInput) {
     });
     let flags = ['--message-format=json'];
     actionInput.flags
+        .filter(flag => !flag.startsWith('--check'))
         .filter(flag => !flag.startsWith('--message-format'))
         .forEach(flag => flags.push(flag));
     let options = [];
     actionInput.options.forEach(option => options.push(option));
     let args = [];
-    actionInput.args.filter(flag => !flag.startsWith('--check')).forEach(arg => args.push(arg));
+    actionInput.args.filter(arg => !arg.startsWith('--check')).forEach(arg => args.push(arg));
     let rustfmtOutput = '';
     try {
         core.startGroup('Executing cargo fmt (JSON output)');
