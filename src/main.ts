@@ -31,10 +31,6 @@ export async function run(actionInput: input.Input): Promise<Result<void, string
         },
     });
 
-    console.log(rustcVersion);
-    console.log(cargoVersion);
-    console.log(rustfmtVersion);
-
     let flags = ['--message-format=json'];
     actionInput.flags
         .filter(flag => !flag.startsWith('--message-format'))

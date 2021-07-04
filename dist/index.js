@@ -7957,15 +7957,10 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             end_line: contents.original_begin_line,
             annotation_level: 'warning',
             title: 'rustfmt check',
-            message: '```diff\n' +
-                `${contents.original
-                    .split('\n')
-                    .map(line => '-' + line)
-                    .join('\n')}` +
-                `${contents.expected
-                    .split('\n')
-                    .map(line => '+' + line)
-                    .join('\n')}` +
+            message: 'Original:\n```\n' +
+                `${contents.original}` +
+                '\n```\nExpected:\n```\n' +
+                `${contents.expected}` +
                 '\n```',
         };
         if (contents.original_begin_line == contents.original_begin_line) {
@@ -8006,9 +8001,6 @@ async function run(actionInput) {
             stdout: (buffer) => (rustfmtVersion = buffer.toString().trim()),
         },
     });
-    console.log(rustcVersion);
-    console.log(cargoVersion);
-    console.log(rustfmtVersion);
     let flags = ['--message-format=json'];
     actionInput.flags
         .filter(flag => !flag.startsWith('--message-format'))

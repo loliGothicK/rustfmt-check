@@ -297,15 +297,10 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             annotation_level: 'warning',
             title: 'rustfmt check',
             message:
-                '```diff\n' +
-                `${contents.original
-                    .split('\n')
-                    .map(line => '-' + line)
-                    .join('\n')}` +
-                `${contents.expected
-                    .split('\n')
-                    .map(line => '+' + line)
-                    .join('\n')}` +
+                'Original:\n```\n' +
+                `${contents.original}` +
+                '\n```\nExpected:\n```\n' +
+                `${contents.expected}` +
                 '\n```',
         };
 
