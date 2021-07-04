@@ -1,0 +1,27 @@
+name: 'rustfmt-check'
+description: 'Run rustfmt and annotate the diff with expected codes'
+author: 'Mitama Lab'
+branding:
+    icon: play-circle
+    color: blue
+
+inputs:
+    token:
+        description: GitHub token
+        required: true
+    flags:
+        description: Flags for the cargo command
+        required: false
+    options:
+        description: Options for the cargo command
+        required: false
+    args:
+        description: Arguments for the rustfmt command
+        required: false
+    name:
+        description: Display name of the created GitHub check. Must be unique across several LoliGothick/rustfmt-check invocations.
+        default: rustfmt
+
+runs:
+    using: 'node16'
+    main: 'dist/index.js'
