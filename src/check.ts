@@ -72,7 +72,14 @@ export class CheckRunner {
         });
         let checkRunId: number;
         try {
-            checkRunId = await this.createCheck(client, options);
+            const response = await client.rest.checks.create({
+                owner: options.owner,
+                repo: options.repo,
+                name: options.name,
+                head_sha: options.head_sha,
+                status: 'in_progress',
+            });
+            checkRunId = response.data.id;
         } catch (error) {
             // `GITHUB_HEAD_REF` is set only for forked repos,
             // so we could check if it is a fork and not a base repo.
@@ -111,19 +118,6 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             return new Err(`${error}`);
         }
         return new Ok(undefined);
-    }
-
-    private async createCheck(client: any, options: CheckOptions): Promise<number> {
-        const response = await client.checks.create({
-            owner: options.owner,
-            repo: options.repo,
-            name: options.name,
-            head_sha: options.head_sha,
-            status: 'in_progress',
-        });
-        // TODO: Check for errors
-
-        return response.data.id as number;
     }
 
     private async runUpdateCheck(

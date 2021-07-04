@@ -7783,7 +7783,14 @@ class CheckRunner {
         });
         let checkRunId;
         try {
-            checkRunId = await this.createCheck(client, options);
+            const response = await client.rest.checks.create({
+                owner: options.owner,
+                repo: options.repo,
+                name: options.name,
+                head_sha: options.head_sha,
+                status: 'in_progress',
+            });
+            checkRunId = response.data.id;
         }
         catch (error) {
             if (process.env.GITHUB_HEAD_REF) {
@@ -7818,16 +7825,6 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
             return new Err(`${error}`);
         }
         return new Ok(undefined);
-    }
-    async createCheck(client, options) {
-        const response = await client.checks.create({
-            owner: options.owner,
-            repo: options.repo,
-            name: options.name,
-            head_sha: options.head_sha,
-            status: 'in_progress',
-        });
-        return response.data.id;
     }
     async runUpdateCheck(client, checkRunId, options) {
         let annotations = this.getBucket();
