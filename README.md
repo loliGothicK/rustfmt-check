@@ -13,10 +13,10 @@ format:
               toolchain: nightly
               components: rustfmt
               override: true
-        - uses: LoliGothick/rustfmt-check@master
+        - uses: LoliGothick/rustfmt-check@v0.2
           with:
               token: ${{ secrets.GITHUB_TOKEN }}
-              flags: -all
+              flags: --all
               options: --manifest-path=Cargo.toml
               args: --config-path=rustfmt.toml
 ```
@@ -27,6 +27,6 @@ format:
 | :-----: | :------: | :----------------------------------------------------------------------------------------------------------------------------------- | :----: | :---------------------: |
 |  token  |    ✔    | GitHub secret token, usually a `${{ secrets.GITHUB_TOKEN }}`.                                                                        | string |                         |
 |  flags  |          | Flags for the `cargo fmt` command. `--message-format=json` is set by default. `--message-format` and `--check` are omitted silently. | string | `--message-format=json` |
-| options |          | Options for the `Cargo fmt` command.                                                                                                 | string |                         |
-|  args   |          | Arguments for the `rustfmt` command. `--check` is omitted silently.                                                                 | string |                         |
+| options |          | Options for the `cargo fmt` command.                                                                                                 | string |                         |
+|  args   |          | Options for the `rustfmt` command. `--check` is omitted silently.                                                                    | string |                         |
 |  name   |          | Name of the created GitHub check. If running this action multiple times, each run must have a unique name.                           | string |         rustfmt         |
