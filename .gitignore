@@ -69,3 +69,4 @@ typings/
 .env
 .next
 .yarn
+lib/
