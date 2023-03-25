@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
+import { outdent as indoc } from 'outdent';
 
 import { Err, Ok, Result } from './result';
 import { plural } from './render';
@@ -82,9 +83,10 @@ export class CheckRunner {
             if (process.env.GITHUB_HEAD_REF) {
                 core.error(`Unable to create clippy annotations! Reason: ${error}`);
                 core.warning('It seems that this Action is executed from the forked repository.');
-                core.warning(`GitHub Actions are not allowed to create Check annotations, \
-when executed for a forked repos. \
-See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
+                core.warning(indoc`
+                  GitHub Actions are not allowed to create Check annotations,
+                  when executed for a forked repos.
+                  See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
                 core.info('Posting clippy checks here instead.');
 
                 this.dumpToStdout();
@@ -255,16 +257,20 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
     }
 
     private getText(context: CheckOptions['context']): string {
-        return `## Results
-| Format checked          | Amount                |
-| ----------------------- | --------------------- |
-| Files                   | ${this.stats.file}    |
-| Count                   | ${this.stats.count}   |
-## Versions
-* ${context.rustc}
-* ${context.cargo}
-* ${context.rustfmt}
-`;
+        return indoc`
+            ## Results
+
+            | Format checked          | Amount                |
+            | ----------------------- | --------------------- |
+            | Files                   | ${this.stats.file}    |
+            | Count                   | ${this.stats.count}   |
+
+            ## Versions
+
+            * ${context.rustc}
+            * ${context.cargo}
+            * ${context.rustfmt}
+        `;
     }
 
     private getConclusion(): string {
@@ -279,18 +285,25 @@ See https://github.com/actions-rs/clippy-check/issues/2 for details.`);
     ///
     /// https://docs.github.com/en/rest/reference/checks#update-a-check-run
     static makeAnnotation(path: string, contents: Mismatch): ChecksCreateParamsOutputAnnotations {
+        const codeBlock = (code: string): string => {
+            return `
+              \`\`\`
+              ${code}
+              \`\`\`
+            `;
+        };
         const annotation: ChecksCreateParamsOutputAnnotations = {
             path,
             start_line: contents.original_begin_line,
             end_line: contents.original_begin_line,
             annotation_level: 'warning',
             title: 'rustfmt check',
-            message:
-                'Original:\n```\n' +
-                `${contents.original}` +
-                '\n```\nExpected:\n```\n' +
-                `${contents.expected}` +
-                '\n```',
+            message: indoc`
+                Original:
+                ${codeBlock(contents.original)}
+                Expected:
+                ${codeBlock(contents.expected)}
+            `,
         };
 
         // Omit these parameters if `start_line` and `end_line` have different values.
