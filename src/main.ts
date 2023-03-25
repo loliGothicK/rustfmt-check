@@ -46,14 +46,15 @@ export async function run(actionInput: input.Input): Promise<Result<void, string
     let rustfmtOutput: string = '';
     try {
         core.startGroup('Executing cargo fmt (JSON output)');
-        const exitCode = await exec.exec('cargo', ['fmt', ...flags, ...options, '--', ...args], {
-            listeners: {
-                stdout: (buffer: Buffer) => (rustfmtOutput = buffer.toString()),
-            },
+        const execOutput = await exec.getExecOutput('cargo', ['fmt', ...flags, ...options, '--', ...args], {
+            ignoreReturnCode: true,
         });
-        if (exitCode !== 0) {
-            throw new Error(`Rustfmt had exited with the Exit Code ${exitCode}`);
+        // TODO:
+        // We should handle exit code.
+        if (execOutput.exitCode !== 0) {
+            throw new Error(`Rustfmt had exited with the Exit Code ${execOutput.exitCode}:\n${execOutput.stderr}`);
         }
+        rustfmtOutput = execOutput.stdout;
     } finally {
         core.endGroup();
     }
