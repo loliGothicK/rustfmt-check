@@ -31,28 +31,33 @@ export async function run(actionInput: input.Input): Promise<Result<void, string
         },
     });
 
-    let flags = ['--message-format=json'];
-    actionInput.flags
-        .filter(flag => !flag.startsWith('--check'))
-        .filter(flag => !flag.startsWith('--message-format'))
-        .forEach(flag => flags.push(flag));
+    const flags = ['--message-format=json'];
+    for (const flag of actionInput.flags
+        .filter(f => !f.startsWith('--check'))
+        .filter(f => !f.startsWith('--message-format'))) {
+        flags.push(flag);
+    }
 
-    let options: string[] = [];
-    actionInput.options.forEach(option => options.push(option));
+    const options: string[] = actionInput.options;
 
-    let args: string[] = [];
-    actionInput.args.filter(arg => !arg.startsWith('--check')).forEach(arg => args.push(arg));
+    const args: string[] = actionInput.args.filter(arg => !arg.startsWith('--check'));
 
-    let rustfmtOutput: string = '';
+    let rustfmtOutput = '';
     try {
         core.startGroup('Executing cargo fmt (JSON output)');
-        const execOutput = await exec.getExecOutput('cargo', ['fmt', ...flags, ...options, '--', ...args], {
-            ignoreReturnCode: true,
-        });
+        const execOutput = await exec.getExecOutput(
+            'cargo',
+            ['fmt', ...flags, ...options, '--', ...args],
+            {
+                ignoreReturnCode: true,
+            },
+        );
         // TODO:
         // We should handle exit code.
         if (execOutput.exitCode !== 0) {
-            throw new Error(`Rustfmt had exited with the Exit Code ${execOutput.exitCode}:\n${execOutput.stderr}`);
+            throw new Error(
+                `Rustfmt had exited with the Exit Code ${execOutput.exitCode}:\n${execOutput.stderr}`,
+            );
         }
         rustfmtOutput = execOutput.stdout;
     } finally {
@@ -63,9 +68,9 @@ export async function run(actionInput: input.Input): Promise<Result<void, string
     if (github.context.payload.pull_request?.head?.sha) {
         sha = github.context.payload.pull_request.head.sha;
     }
-    let runner = new check.CheckRunner();
+    const runner = new check.CheckRunner();
     const output = JSON.parse(rustfmtOutput) as check.Output[];
-    const res = await runner.check(output, {
+    return await runner.check(output, {
         token: actionInput.token,
         name: actionInput.name,
         owner: github.context.repo.owner,
@@ -78,7 +83,6 @@ export async function run(actionInput: input.Input): Promise<Result<void, string
             rustfmt: rustfmtVersion,
         },
     });
-    return res;
 }
 
 async function main(): Promise<void> {

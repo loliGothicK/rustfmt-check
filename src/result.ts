@@ -1,8 +1,6 @@
 export type Result<T, E> = Ok<T, E> | Err<T, E>;
 
-interface Transformer<T, U> {
-    (arg: T): U;
-}
+type Transformer<T, U> = (arg: T) => U;
 
 export class Ok<T, E> {
     constructor(readonly value: T) {}

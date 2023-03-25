@@ -1,12 +1,17 @@
 {
   "name": "rustfmt-check",
   "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
+  "description": "\"GitHub Action for PR annotations with rustfmt checks\"",
+  "main": "lib/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src/main.ts",
-    "lint:fix": "eslint --fix src/main.ts"
+    "build": "tsc",
+    "format": "prettier --write '**/*.ts'",
+    "format:check": "prettier --check '**/*.ts'",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint --fix src/**/*.ts",
+    "pack": "ncc build --source-map --license LICENSE",
+    "test": "jest --runInBand",
+    "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
   },
   "keywords": [],
   "author": "",
@@ -15,22 +20,31 @@
     "url": "https://github.com/LoliGothick/rustfmt-check/issues"
   },
   "devDependencies": {
-    "@types/core-js": "^2.5.4",
-    "@types/node": "^15.14.0",
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "@typescript-eslint/parser": "^4.28.1",
-    "@vercel/ncc": "^0.28.6",
-    "eslint": "^7.29.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "prettier": "^2.3.2",
-    "ts-node": "^10.0.0",
-    "typescript": "^4.3.5"
+    "@types/core-js": "2.5.5",
+    "@types/node": "18.15.9",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "5.56.0",
+    "@vercel/ncc": "0.36.1",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-github": "^4.6.1",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.1",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "2.8.7",
+    "typescript": "^5.0.0"
   },
   "dependencies": {
     "@actions/core": "^1.4.0",
     "@actions/exec": "^1.1.0",
     "@actions/github": "^5.0.0",
+    "outdent": "^0.8.0",
     "string-argv": "^0.3.1"
+  },
+  "volta": {
+    "node": "18.15.0",
+    "yarn": "3.5.0"
   }
 }
