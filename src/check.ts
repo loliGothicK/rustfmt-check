@@ -6,8 +6,8 @@ import { Err, Ok, Result } from './result';
 import { plural } from './render';
 
 import pkg from '../package.json';
+import { Conclusion, OutputAnnotations, RequestData } from './types';
 
-type ChecksCreateParamsOutputAnnotations = any;
 const USER_AGENT = `${pkg.name}/${pkg.version} (${pkg.bugs.url})`;
 
 interface CheckOptions {
@@ -44,7 +44,7 @@ interface Stats {
 }
 
 export class CheckRunner {
-    private annotations: ChecksCreateParamsOutputAnnotations[];
+    private readonly annotations: OutputAnnotations[];
     private stats: Stats;
 
     constructor() {
@@ -131,7 +131,7 @@ export class CheckRunner {
         let annotations = this.getBucket();
         while (annotations.length > 0) {
             // Request data is mostly the same for create/update calls
-            const req: any = {
+            const req: RequestData = {
                 owner: options.owner,
                 repo: options.repo,
                 name: options.name,
@@ -173,7 +173,7 @@ export class CheckRunner {
         checkRunId: number,
         options: CheckOptions,
     ): Promise<void> {
-        const req: any = {
+        const req: RequestData = {
             owner: options.owner,
             repo: options.repo,
             name: options.name,
@@ -200,7 +200,7 @@ export class CheckRunner {
         checkRunId: number,
         options: CheckOptions,
     ): Promise<void> {
-        const req: any = {
+        const req: RequestData = {
             owner: options.owner,
             repo: options.repo,
             name: options.name,
@@ -227,8 +227,8 @@ export class CheckRunner {
         }
     }
 
-    private getBucket(): ChecksCreateParamsOutputAnnotations[] {
-        const annotations: ChecksCreateParamsOutputAnnotations[] = [];
+    private getBucket(): OutputAnnotations[] {
+        const annotations: OutputAnnotations[] = [];
         while (annotations.length < 50) {
             const annotation = this.annotations.pop();
             if (annotation) {
@@ -273,18 +273,14 @@ export class CheckRunner {
         `;
     }
 
-    private getConclusion(): string {
-        if (this.stats.file > 0) {
-            return 'failure';
-        } else {
-            return 'success';
-        }
+    private getConclusion(): Conclusion {
+        return this.stats.file > 0 ? 'failure' : 'success';
     }
 
     /// Convert parsed JSON line into the GH annotation object
     ///
     /// https://docs.github.com/en/rest/reference/checks#update-a-check-run
-    static makeAnnotation(path: string, contents: Mismatch): ChecksCreateParamsOutputAnnotations {
+    static makeAnnotation(path: string, contents: Mismatch): OutputAnnotations {
         const codeBlock = (code: string): string => {
             return `
               \`\`\`
@@ -292,7 +288,7 @@ export class CheckRunner {
               \`\`\`
             `;
         };
-        const annotation: ChecksCreateParamsOutputAnnotations = {
+        const annotation: OutputAnnotations = {
             path,
             start_line: contents.original_begin_line,
             end_line: contents.original_begin_line,
@@ -307,11 +303,12 @@ export class CheckRunner {
         };
 
         // Omit these parameters if `start_line` and `end_line` have different values.
-        if (contents.original_begin_line === contents.original_begin_line) {
-            annotation.start_column = 0;
-            annotation.end_column = contents.original.length;
-        }
-
-        return annotation;
+        return contents.original_begin_line === contents.original_begin_line
+            ? annotation
+            : Object.assign(
+                  annotation,
+                  { start_column: 0 },
+                  { end_column: contents.original.length },
+              );
     }
 }
