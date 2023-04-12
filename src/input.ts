@@ -8,6 +8,7 @@ export interface Input {
     options: string[];
     args: string[];
     name: string;
+    workingDirectory: string;
 }
 
 export function get(): Input {
@@ -16,11 +17,13 @@ export function get(): Input {
     const options = stringArgv(core.getInput('options', { required: false }));
     const args = stringArgv(core.getInput('args', { required: false }));
     const name = core.getInput('name', { required: false });
+    const workingDirectory = core.getInput('working-directory', { required: false });
     return {
         token,
         flags,
         options,
         args,
         name,
+        workingDirectory,
     };
 }

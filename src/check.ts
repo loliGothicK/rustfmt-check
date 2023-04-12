@@ -173,11 +173,12 @@ export class CheckRunner {
         checkRunId: number,
         options: CheckOptions,
     ): Promise<void> {
-        const req: RequestData = {
+        // TODO: Check for errors
+        const response = await client.rest.checks.update({
             owner: options.owner,
             repo: options.repo,
-            name: options.name,
             check_run_id: checkRunId,
+            name: options.name,
             status: 'completed',
             conclusion: this.getConclusion(),
             completed_at: new Date().toISOString(),
@@ -186,10 +187,11 @@ export class CheckRunner {
                 summary: this.getSummary(),
                 text: this.getText(options.context),
             },
-        };
+        });
 
-        // TODO: Check for errors
-        await client.rest.checks.update(req);
+        if (response.status) {
+            return;
+        }
 
         return;
     }

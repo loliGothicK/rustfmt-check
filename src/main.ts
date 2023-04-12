@@ -42,12 +42,17 @@ export async function run(actionInput: input.Input): Promise<Result<void, string
 
     const args: string[] = actionInput.args.filter(arg => !arg.startsWith('--check'));
 
+    const manifestPath: string = actionInput.workingDirectory.endsWith('/')
+        ? `${actionInput.workingDirectory}Cargo.toml`
+        : `${actionInput.workingDirectory}/Cargo.toml`;
+
     let rustfmtOutput = '';
+
     try {
         core.startGroup('Executing cargo fmt (JSON output)');
         const execOutput = await exec.getExecOutput(
             'cargo',
-            ['fmt', ...flags, ...options, '--', ...args],
+            ['fmt', ...flags, ...options, `--manifest-path=${manifestPath}`, '--', ...args],
             {
                 ignoreReturnCode: true,
             },

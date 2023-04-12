@@ -21,6 +21,9 @@ inputs:
     name:
         description: Display name of the created GitHub check. Must be unique across several LoliGothick/rustfmt-check invocations.
         default: rustfmt
+    working-directory:
+        description: working directory where to execute `cargo fmt`
+        default: .
 
 runs:
     using: 'node16'
