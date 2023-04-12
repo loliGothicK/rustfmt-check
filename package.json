@@ -1,6 +1,6 @@
 {
     "name": "rustfmt-check",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "\"GitHub Action for PR annotations with rustfmt checks\"",
     "main": "lib/src/main.js",
     "scripts": {
