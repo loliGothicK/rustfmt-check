@@ -13,20 +13,22 @@ format:
               toolchain: nightly
               components: rustfmt
               override: true
-        - uses: LoliGothick/rustfmt-check@v0.2
+        - uses: LoliGothick/rustfmt-check@master
           with:
               token: ${{ secrets.GITHUB_TOKEN }}
               flags: --all
               options: --manifest-path=Cargo.toml
               args: --config-path=rustfmt.toml
+              working-directory: my_crate
 ```
 
 ## Inputs
 
-|  Name   | Required | Description                                                                                                                          |  Type  |         Default         |
-| :-----: | :------: | :----------------------------------------------------------------------------------------------------------------------------------- | :----: | :---------------------: |
-|  token  |    ✔    | GitHub secret token, usually a `${{ secrets.GITHUB_TOKEN }}`.                                                                        | string |                         |
-|  flags  |          | Flags for the `cargo fmt` command. `--message-format=json` is set by default. `--message-format` and `--check` are omitted silently. | string | `--message-format=json` |
-| options |          | Options for the `cargo fmt` command.                                                                                                 | string |                         |
-|  args   |          | Options for the `rustfmt` command. `--check` is omitted silently.                                                                    | string |                         |
-|  name   |          | Name of the created GitHub check. If running this action multiple times, each run must have a unique name.                           | string |         rustfmt         |
+|       Name        | Required | Description                                                                                                                          |  Type  |         Default         |
+|:-----------------:| :------: |:-------------------------------------------------------------------------------------------------------------------------------------| :----: |:-----------------------:|
+|       token       |    ✔    | GitHub secret token, usually a `${{ secrets.GITHUB_TOKEN }}`.                                                                        | string |                         |
+|       flags       |          | Flags for the `cargo fmt` command. `--message-format=json` is set by default. `--message-format` and `--check` are omitted silently. | string | `--message-format=json` |
+|      options      |          | Options for the `cargo fmt` command.                                                                                                 | string |                         |
+|       args        |          | Options for the `rustfmt` command. `--check` is omitted silently.                                                                    | string |                         |
+|       name        |          | Name of the created GitHub check. If running this action multiple times, each run must have a unique name.                           | string |         rustfmt         |
+| working-directory |          | The working directory in which `carg fmt` is executed.                                                                               | string |            .            |
