@@ -293,6 +293,7 @@ const string_argv_1 = __importDefault(__nccwpck_require__(9453));
 const core = __importStar(__nccwpck_require__(2186));
 function get() {
     const token = core.getInput('token', { required: true });
+    const toolchain = core.getInput('toolchain', { required: false });
     const flags = (0, string_argv_1.default)(core.getInput('flags', { required: false }));
     const options = (0, string_argv_1.default)(core.getInput('options', { required: false }));
     const args = (0, string_argv_1.default)(core.getInput('args', { required: false }));
@@ -300,6 +301,7 @@ function get() {
     const workingDirectory = core.getInput('working-directory', { required: false });
     return {
         token,
+        toolchain,
         flags,
         options,
         args,
@@ -347,29 +349,49 @@ const exec = __importStar(__nccwpck_require__(1514));
 const github = __importStar(__nccwpck_require__(5438));
 const input = __importStar(__nccwpck_require__(1044));
 const check = __importStar(__nccwpck_require__(9877));
+const result_1 = __nccwpck_require__(4801);
+async function getVersion(cmd, toolchain) {
+    const output = await exec.getExecOutput('rustup', ['run', toolchain, ...cmd, '-V'], {
+        silent: true,
+    });
+    if (output.exitCode !== 0) {
+        return new result_1.Err(output.stderr);
+    }
+    return new result_1.Ok(output.stdout);
+}
 async function run(actionInput) {
     const startedAt = new Date().toISOString();
+    const toolchain = actionInput.toolchain === undefined ? 'stable' : actionInput.toolchain;
     let rustcVersion = '';
+    {
+        const v = await getVersion(['rustc'], actionInput.toolchain);
+        if (v.isErr()) {
+            return v;
+        }
+        else {
+            rustcVersion = v.unwrap();
+        }
+    }
     let cargoVersion = '';
+    {
+        const v = await getVersion(['cargo'], actionInput.toolchain);
+        if (v.isErr()) {
+            return v;
+        }
+        else {
+            cargoVersion = v.unwrap();
+        }
+    }
     let rustfmtVersion = '';
-    await exec.exec('rustc', ['-V'], {
-        silent: true,
-        listeners: {
-            stdout: (buffer) => (rustcVersion = buffer.toString().trim()),
-        },
-    });
-    await exec.exec('cargo', ['-V'], {
-        silent: true,
-        listeners: {
-            stdout: (buffer) => (cargoVersion = buffer.toString().trim()),
-        },
-    });
-    await exec.exec('rustfmt', ['-V'], {
-        silent: true,
-        listeners: {
-            stdout: (buffer) => (rustfmtVersion = buffer.toString().trim()),
-        },
-    });
+    {
+        const v = await getVersion(['rustfmt'], actionInput.toolchain);
+        if (v.isErr()) {
+            return v;
+        }
+        else {
+            rustfmtVersion = v.unwrap();
+        }
+    }
     const flags = ['--message-format=json'];
     for (const flag of actionInput.flags
         .filter(f => !f.startsWith('--check'))
@@ -382,15 +404,29 @@ async function run(actionInput) {
         ? `${actionInput.workingDirectory}Cargo.toml`
         : `${actionInput.workingDirectory}/Cargo.toml`;
     let rustfmtOutput = '';
+    let stdErr = '';
+    let rustfmtExitCode = 0;
     try {
         core.startGroup('Executing cargo fmt (JSON output)');
-        const execOutput = await exec.getExecOutput('cargo', ['fmt', ...flags, ...options, `--manifest-path=${manifestPath}`, '--', ...args], {
+        const execOutput = await exec.getExecOutput('rustup', [
+            'run',
+            toolchain,
+            'cargo',
+            'fmt',
+            ...flags,
+            ...options,
+            `--manifest-path=${manifestPath}`,
+            '--',
+            ...args,
+        ], {
             ignoreReturnCode: true,
         });
         if (execOutput.exitCode !== 0) {
             throw new Error(`Rustfmt had exited with the Exit Code ${execOutput.exitCode}:\n${execOutput.stderr}`);
         }
         rustfmtOutput = execOutput.stdout;
+        stdErr = execOutput.stderr;
+        rustfmtExitCode = execOutput.exitCode;
     }
     finally {
         core.endGroup();
@@ -401,7 +437,7 @@ async function run(actionInput) {
     }
     const runner = new check.CheckRunner();
     const output = JSON.parse(rustfmtOutput);
-    return await runner.check(output, {
+    await runner.check(output, {
         token: actionInput.token,
         name: actionInput.name,
         owner: github.context.repo.owner,
@@ -414,17 +450,17 @@ async function run(actionInput) {
             rustfmt: rustfmtVersion,
         },
     });
+    if (rustfmtExitCode !== 0) {
+        return new result_1.Err(`Clippy had exited with the ${rustfmtExitCode} exit code:\n${stdErr}`);
+    }
+    return new result_1.Ok(undefined);
 }
 exports.run = run;
 async function main() {
-    try {
-        const actionInput = input.get();
-        const res = await run(actionInput);
-        res.expect(e => `${e}`);
-    }
-    catch (error) {
-        core.setFailed(`${error}`);
-    }
+    const actionInput = input.get();
+    const res = await run(actionInput);
+    if (res.type === 'failure')
+        core.setFailed(`${res.unwrap_err()}`);
 }
 main();
 
@@ -14875,7 +14911,7 @@ module.exports = require("zlib");
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"rustfmt-check","version":"0.3.2","description":"\\"GitHub Action for PR annotations with rustfmt checks\\"","main":"lib/src/main.js","scripts":{"build":"tsc","format":"prettier --check --ignore ./**/*.ts","format:fix":"prettier --write ./**/*.ts","lint":"eslint src/**/*.ts","lint:fix":"eslint --fix src/**/*.ts","pack":"ncc build --source-map --license LICENSE","test":"jest --runInBand","all":"npm run format:fix && npm run lint:fix && npm run build && npm run pack"},"keywords":[],"author":"","license":"MIT","bugs":{"url":"https://github.com/LoliGothick/rustfmt-check/issues"},"devDependencies":{"@types/core-js":"2.5.5","@types/node":"18.15.11","@typescript-eslint/eslint-plugin":"^5.53.0","@typescript-eslint/parser":"5.57.0","@vercel/ncc":"0.36.1","eslint":"^8.34.0","eslint-config-prettier":"8.8.0","eslint-config-standard-with-typescript":"^34.0.0","eslint-plugin-github":"^4.6.1","eslint-plugin-import":"^2.27.5","eslint-plugin-jest":"^27.2.1","eslint-plugin-n":"^15.6.1","eslint-plugin-promise":"^6.1.1","prettier":"2.8.7","typescript":"^5.0.0"},"dependencies":{"@actions/core":"^1.4.0","@actions/exec":"^1.1.0","@actions/github":"^5.0.0","outdent":"^0.8.0","string-argv":"^0.3.1"},"volta":{"node":"18.15.0","yarn":"3.5.0"}}');
+module.exports = JSON.parse('{"name":"rustfmt-check","version":"0.4.0","description":"\\"GitHub Action for PR annotations with rustfmt checks\\"","main":"lib/src/main.js","scripts":{"build":"tsc","format":"prettier --check --ignore ./**/*.ts","format:fix":"prettier --write ./**/*.ts","lint":"eslint src/**/*.ts","lint:fix":"eslint --fix src/**/*.ts","pack":"ncc build --source-map --license LICENSE","test":"jest --runInBand","all":"npm run format:fix && npm run lint:fix && npm run build && npm run pack"},"keywords":[],"author":"","license":"MIT","bugs":{"url":"https://github.com/LoliGothick/rustfmt-check/issues"},"devDependencies":{"@types/core-js":"2.5.5","@types/node":"18.16.17","@typescript-eslint/eslint-plugin":"^5.53.0","@typescript-eslint/parser":"5.59.7","@vercel/ncc":"0.36.1","eslint":"^8.34.0","eslint-config-prettier":"8.8.0","eslint-config-standard-with-typescript":"^35.0.0","eslint-plugin-github":"^4.6.1","eslint-plugin-import":"^2.27.5","eslint-plugin-jest":"^27.2.1","eslint-plugin-n":"^15.6.1","eslint-plugin-promise":"^6.1.1","prettier":"2.8.8","typescript":"^5.0.0"},"dependencies":{"@actions/core":"^1.4.0","@actions/exec":"^1.1.0","@actions/github":"^5.0.0","outdent":"^0.8.0","string-argv":"^0.3.1"},"volta":{"node":"18.16.0","yarn":"3.6.0"}}');
 
 /***/ }),
 
