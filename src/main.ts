@@ -18,7 +18,6 @@ async function getVersion(cmd: string[], toolchain: string): Promise<Result<stri
 
 export async function run(actionInput: input.Input): Promise<Result<void, string>> {
     const startedAt = new Date().toISOString();
-    const toolchain = actionInput.toolchain === undefined ? 'stable' : actionInput.toolchain;
     let rustcVersion = '';
     {
         const v = await getVersion(['rustc'], actionInput.toolchain);
@@ -72,7 +71,7 @@ export async function run(actionInput: input.Input): Promise<Result<void, string
             'rustup',
             [
                 'run',
-                toolchain,
+                actionInput.toolchain,
                 'cargo',
                 'fmt',
                 ...flags,

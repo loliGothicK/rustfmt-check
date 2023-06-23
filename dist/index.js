@@ -361,7 +361,6 @@ async function getVersion(cmd, toolchain) {
 }
 async function run(actionInput) {
     const startedAt = new Date().toISOString();
-    const toolchain = actionInput.toolchain === undefined ? 'stable' : actionInput.toolchain;
     let rustcVersion = '';
     {
         const v = await getVersion(['rustc'], actionInput.toolchain);
@@ -410,7 +409,7 @@ async function run(actionInput) {
         core.startGroup('Executing cargo fmt (JSON output)');
         const execOutput = await exec.getExecOutput('rustup', [
             'run',
-            toolchain,
+            actionInput.toolchain,
             'cargo',
             'fmt',
             ...flags,
@@ -14911,7 +14910,7 @@ module.exports = require("zlib");
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"rustfmt-check","version":"0.4.0","description":"\\"GitHub Action for PR annotations with rustfmt checks\\"","main":"lib/src/main.js","scripts":{"build":"tsc","format":"prettier --check --ignore ./**/*.ts","format:fix":"prettier --write ./**/*.ts","lint":"eslint src/**/*.ts","lint:fix":"eslint --fix src/**/*.ts","pack":"ncc build --source-map --license LICENSE","test":"jest --runInBand","all":"npm run format:fix && npm run lint:fix && npm run build && npm run pack"},"keywords":[],"author":"","license":"MIT","bugs":{"url":"https://github.com/LoliGothick/rustfmt-check/issues"},"devDependencies":{"@types/core-js":"2.5.5","@types/node":"18.16.17","@typescript-eslint/eslint-plugin":"^5.53.0","@typescript-eslint/parser":"5.59.7","@vercel/ncc":"0.36.1","eslint":"^8.34.0","eslint-config-prettier":"8.8.0","eslint-config-standard-with-typescript":"^35.0.0","eslint-plugin-github":"^4.6.1","eslint-plugin-import":"^2.27.5","eslint-plugin-jest":"^27.2.1","eslint-plugin-n":"^15.6.1","eslint-plugin-promise":"^6.1.1","prettier":"2.8.8","typescript":"^5.0.0"},"dependencies":{"@actions/core":"^1.4.0","@actions/exec":"^1.1.0","@actions/github":"^5.0.0","outdent":"^0.8.0","string-argv":"^0.3.1"},"volta":{"node":"18.16.0","yarn":"3.6.0"}}');
+module.exports = JSON.parse('{"name":"rustfmt-check","version":"0.4.1","description":"\\"GitHub Action for PR annotations with rustfmt checks\\"","main":"lib/src/main.js","scripts":{"build":"tsc","format":"prettier --check --ignore ./**/*.ts","format:fix":"prettier --write ./**/*.ts","lint":"eslint src/**/*.ts","lint:fix":"eslint --fix src/**/*.ts","pack":"ncc build --source-map --license LICENSE","test":"jest --runInBand","all":"npm run format:fix && npm run lint:fix && npm run build && npm run pack"},"keywords":[],"author":"","license":"MIT","bugs":{"url":"https://github.com/LoliGothick/rustfmt-check/issues"},"devDependencies":{"@types/core-js":"2.5.5","@types/node":"18.16.18","@typescript-eslint/eslint-plugin":"^5.53.0","@typescript-eslint/parser":"5.60.0","@vercel/ncc":"0.36.1","eslint":"^8.34.0","eslint-config-prettier":"8.8.0","eslint-config-standard-with-typescript":"^35.0.0","eslint-plugin-github":"^4.6.1","eslint-plugin-import":"^2.27.5","eslint-plugin-jest":"^27.2.1","eslint-plugin-n":"^15.6.1","eslint-plugin-promise":"^6.1.1","prettier":"2.8.8","typescript":"^5.0.0"},"dependencies":{"@actions/core":"^1.4.0","@actions/exec":"^1.1.0","@actions/github":"^5.0.0","outdent":"^0.8.0","string-argv":"^0.3.1"},"volta":{"node":"18.16.1","yarn":"3.6.0"}}');
 
 /***/ }),
 

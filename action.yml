@@ -11,7 +11,7 @@ inputs:
         required: true
     toolchain:
         description: Rust toolchain to use
-        default: stable
+        default: nightly
     flags:
         description: Flags for the cargo command
         required: false
