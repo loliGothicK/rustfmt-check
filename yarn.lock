@@ -752,10 +752,10 @@ eslint-config-prettier@8.8.0, eslint-config-prettier@>=8.0.0:
   resolved "https://registry.npmjs.org/eslint-config-prettier/-/eslint-config-prettier-8.8.0.tgz"
   integrity sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==
 
-eslint-config-standard-with-typescript@^35.0.0:
-  version "35.0.0"
-  resolved "https://registry.npmjs.org/eslint-config-standard-with-typescript/-/eslint-config-standard-with-typescript-35.0.0.tgz"
-  integrity sha512-Xa7DY9GgduZyp0qmXxBF0/dB+Vm4/DgWu1lGpNLJV2d46aCaUxTKDEnkzjUWX/1O9S0a+Dhnw7A4oI0JpYzwtw==
+eslint-config-standard-with-typescript@^36.0.0:
+  version "36.0.0"
+  resolved "https://registry.npmjs.org/eslint-config-standard-with-typescript/-/eslint-config-standard-with-typescript-36.0.0.tgz"
+  integrity sha512-8ZSEskfrDAkUF2lTQLMT0CBzgRNlx1uIM7l2I7L683dKAXUdHuEL2x+GxuGAsdsoWbx7W7Zv0xF67VCEZXIk0Q==
   dependencies:
     "@typescript-eslint/parser" "^5.50.0"
     eslint-config-standard "17.0.0"
@@ -2040,9 +2040,9 @@ typed-array-length@^1.0.4:
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
 
-typescript@^5.1.5:
+typescript@^5.0.0:
   version "5.1.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.5.tgz#a3ae755082488b6046fe64345d293ef26af08671"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-5.1.5.tgz"
   integrity sha512-FOH+WN/DQjUvN6WgW+c4Ml3yi0PH+a/8q+kNIfRehv1wLhWONedw85iu+vQ39Wp49IzTJEsZ2lyLXpBF7mkF1g==
 
 unbox-primitive@^1.0.2:
