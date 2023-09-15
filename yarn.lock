@@ -358,10 +358,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.17.6":
-  version: 18.17.6
-  resolution: "@types/node@npm:18.17.6"
-  checksum: 70bc92adde47d569f25c5ed40b55040cdf189518d6149e0c3041c6e60b1098cad9c48a856f0b7868ebd74d4098a0ca508b0ec4373dd96216eb8a387ee898e14c
+"@types/node@npm:18.17.16":
+  version: 18.17.16
+  resolution: "@types/node@npm:18.17.16"
+  checksum: 8f9dbaf4a67a14110e2a0d805f9b57f3a5cda774dbcb7b1e7973efe31d5eeea358482dbe36a5bfadb0dde99f065f1ae0531f25a032f015871aa0b2896eb3c4ae
   languageName: node
   linkType: hard
 
@@ -3483,7 +3483,7 @@ __metadata:
     "@actions/exec": ^1.1.0
     "@actions/github": ^5.0.0
     "@types/core-js": 2.5.6
-    "@types/node": 18.17.6
+    "@types/node": 18.17.16
     "@typescript-eslint/eslint-plugin": ^6.0.0
     "@typescript-eslint/parser": 6.4.0
     "@vercel/ncc": 0.36.1
