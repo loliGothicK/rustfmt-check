@@ -1535,8 +1535,8 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-github@npm:^4.6.1":
-  version: 4.10.0
-  resolution: "eslint-plugin-github@npm:4.10.0"
+  version: 4.10.1
+  resolution: "eslint-plugin-github@npm:4.10.1"
   dependencies:
     "@github/browserslist-config": ^1.0.0
     "@typescript-eslint/eslint-plugin": ^6.0.0
@@ -1559,7 +1559,7 @@ __metadata:
     eslint: ^8.0.1
   bin:
     eslint-ignore-errors: bin/eslint-ignore-errors.js
-  checksum: a96fe9ca11a166b550eb6e25ad601f268c2293f84ea0f16fb2427dfc22be6f57696841e4e1d34e1cfb9298e0f5dd6e3194578864b37bc32704129eed89714a16
+  checksum: b4addbf8cb5599f9cca27a53a66651ea84e0aeb9a51251d61cb53d6634bfd69843199bcc1c8d39af4b1fee2044dc63951781e79b0ea35c88524ab76142336ed3
   languageName: node
   linkType: hard
 
