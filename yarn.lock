@@ -337,10 +337,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/core-js@npm:2.5.6":
-  version: 2.5.6
-  resolution: "@types/core-js@npm:2.5.6"
-  checksum: 05cfeea4c918c88afcff5949e05a66c9c6cccd67f3de80732609d2546da0fdbd4350d6ecb415d4301f877e5ae1073c8afc0d500233f2b8826dd66d14c6e0c854
+"@types/core-js@npm:2.5.8":
+  version: 2.5.8
+  resolution: "@types/core-js@npm:2.5.8"
+  checksum: 91c9114bded03addafa05a0f68833667dc3a1c1ec8b988c3c85dc9ea7e3afe9aeb73b9c56c30796236ebcebaa9a18c75e810649e86f88069656c199ac5308028
   languageName: node
   linkType: hard
 
@@ -3720,7 +3720,7 @@ __metadata:
     "@actions/core": ^1.4.0
     "@actions/exec": ^1.1.0
     "@actions/github": ^5.0.0
-    "@types/core-js": 2.5.6
+    "@types/core-js": 2.5.8
     "@types/node": 18.18.9
     "@typescript-eslint/eslint-plugin": ^6.0.0
     "@typescript-eslint/parser": 6.11.0
