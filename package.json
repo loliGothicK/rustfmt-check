@@ -39,7 +39,7 @@
     "dependencies": {
         "@actions/core": "^1.4.0",
         "@actions/exec": "^1.1.0",
-        "@actions/github": "^5.0.0",
+        "@actions/github": "^6.0.0",
         "outdent": "^0.8.0",
         "string-argv": "^0.3.1"
     },
