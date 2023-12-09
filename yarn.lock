@@ -1581,9 +1581,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-standard-with-typescript@npm:^40.0.0":
-  version: 40.0.0
-  resolution: "eslint-config-standard-with-typescript@npm:40.0.0"
+"eslint-config-standard-with-typescript@npm:^42.0.0":
+  version: 42.0.0
+  resolution: "eslint-config-standard-with-typescript@npm:42.0.0"
   dependencies:
     "@typescript-eslint/parser": ^6.4.0
     eslint-config-standard: 17.1.0
@@ -1594,7 +1594,7 @@ __metadata:
     eslint-plugin-n: "^15.0.0 || ^16.0.0 "
     eslint-plugin-promise: ^6.0.0
     typescript: "*"
-  checksum: 3d78c0c28ddaa2b35daaeb894b860857edae0f32f0dc9e3b57d5583da26082a1c310b784e8327269cc59e2505fce0abd630f9bea3c1ebae33793166efaee9442
+  checksum: 7e8befb058da1e6c41848c1d418839489462e0db6eaab1128c3ecc5d3dec419d548bb2c6988979d4e48435adb5fddfcd4bbaf95862354536331fc5bc0920c0b7
   languageName: node
   linkType: hard
 
@@ -3742,7 +3742,7 @@ __metadata:
     "@vercel/ncc": 0.38.1
     eslint: ^8.34.0
     eslint-config-prettier: 8.8.0
-    eslint-config-standard-with-typescript: ^40.0.0
+    eslint-config-standard-with-typescript: ^42.0.0
     eslint-plugin-github: ^4.6.1
     eslint-plugin-import: ^2.27.5
     eslint-plugin-jest: ^27.2.1
