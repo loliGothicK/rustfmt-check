@@ -376,12 +376,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.10.4":
-  version: 20.10.4
-  resolution: "@types/node@npm:20.10.4"
+"@types/node@npm:20.11.0":
+  version: 20.11.0
+  resolution: "@types/node@npm:20.11.0"
   dependencies:
     undici-types: ~5.26.4
-  checksum: 054b296417e771ab524bea63cf3289559c6bdf290d45428f7cc68e9b00030ff7a0ece47b8c99a26b4f47a443919813bcf42beadff2f0bea7d8125fa541d92eb0
+  checksum: 1bd6890db7e0404d11c33d28f46f19f73256f0ba35d19f0ef2a0faba09f366f188915fb9338eebebcc472075c1c4941e17c7002786aa69afa44980737846b200
   languageName: node
   linkType: hard
 
@@ -3753,7 +3753,7 @@ __metadata:
     "@actions/exec": ^1.1.0
     "@actions/github": ^6.0.0
     "@types/core-js": 2.5.8
-    "@types/node": 20.10.4
+    "@types/node": 20.11.0
     "@typescript-eslint/eslint-plugin": ^6.0.0
     "@typescript-eslint/parser": 6.14.0
     "@vercel/ncc": 0.38.1
