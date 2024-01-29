@@ -23,7 +23,7 @@
         "@types/core-js": "2.5.8",
         "@types/node": "20.11.10",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
-        "@typescript-eslint/parser": "6.19.1",
+        "@typescript-eslint/parser": "6.20.0",
         "@vercel/ncc": "0.38.1",
         "eslint": "^8.34.0",
         "eslint-config-prettier": "8.8.0",
