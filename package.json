@@ -45,7 +45,7 @@
     },
     "volta": {
         "node": "20.11.0",
-        "yarn": "3.8.0"
+        "npm": "10.4.0"
     },
     "packageManager": "yarn@3.8.0"
 }
