@@ -11,7 +11,7 @@
         "lint:fix": "eslint --fix --ext .ts src",
         "pack": "ncc build --source-map --license LICENSE",
         "test": "jest --runInBand",
-        "all": "npm run format:fix && npm run lint:fix && npm run build && npm run pack"
+        "release": "npm run format:fix && npm run lint:fix && npm run build && npm run pack"
     },
     "keywords": [],
     "author": "",
