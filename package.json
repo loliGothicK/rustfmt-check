@@ -34,7 +34,7 @@
         "string-argv": "^0.3.1"
     },
     "volta": {
-        "node": "22.13.0",
+        "node": "22.13.1",
         "yarn": "1.22.22"
     },
     "packageManager": "yarn@1.22.22"
