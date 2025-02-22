@@ -1,6 +1,6 @@
 {
     "name": "rustfmt-check",
-    "version": "0.5.0-alpha.0",
+    "version": "0.5.0",
     "description": "\"GitHub Action for PR annotations with rustfmt checks\"",
     "main": "lib/src/main.js",
     "scripts": {
@@ -9,7 +9,7 @@
         "lint:fix": "npx biome lint --write ./src",
         "fmt": "npx biome format --write ./src",
         "fmt:check": "npx biome format ./src",
-        "ncc": "ncc build --source-map --license LICENSE",
+        "ncc": "ncc build --minify --source-map --license LICENSE",
         "test": "jest --runInBand",
         "release": "yarn fmt && yarn lint:fix && yarn build && yarn ncc"
     },
