@@ -4,12 +4,12 @@ on:
   push
 
 jobs:
-
-  lint:
+  lint_and_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: volta-cli/action@v4
-      - run: npm install
-      - run: npm run fmt:check
-      - run: npm run lint
+      - run: yarn install
+      - run: yarn fmt:check
+      - run: yarn lint
+      - run: yarn test

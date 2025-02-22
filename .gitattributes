@@ -1,0 +1,18 @@
+###############################################################################
+# Set default behavior to automatically normalize line endings.
+###############################################################################
+* text=auto
+
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.lock text eol=lf
+
+###############################################################################
+# behavior for image files
+#
+# image files are treated as binary by default.
+###############################################################################
+#*.jpg   binary
+#*.png   binary
+#*.gif   binary
