@@ -5,13 +5,13 @@
     "main": "lib/src/main.js",
     "scripts": {
         "build": "tsc",
-        "lint": "yarn biome lint ./src",
-        "lint:fix": "yarn biome lint --apply ./src",
-        "fmt": "yarn biome format --write ./src",
-        "fmt:check": "yarn biome format ./src",
+        "lint": "npx biome lint ./src",
+        "lint:fix": "npx biome lint --write ./src",
+        "fmt": "npx biome format --write ./src",
+        "fmt:check": "npx biome format ./src",
         "pack": "ncc build --source-map --license LICENSE",
         "test": "jest --runInBand",
-        "release": "yarn format:fix && yarn lint:fix && yarn build && yarn pack"
+        "release": "yarn fmt && yarn lint:fix && yarn build && yarn pack"
     },
     "keywords": [],
     "author": "",
@@ -24,14 +24,18 @@
         "@types/core-js": "2.5.8",
         "@types/node": "22.13.5",
         "@vercel/ncc": "0.38.3",
-        "typescript": "^5.0.0"
+        "jest": "29.7.0",
+        "ts-jest": "^29.2.5",
+        "typescript": "5.7.3"
     },
     "dependencies": {
-        "@actions/core": "^1.4.0",
-        "@actions/exec": "^1.1.0",
-        "@actions/github": "^6.0.0",
-        "outdent": "^0.8.0",
-        "string-argv": "^0.3.1"
+        "@actions/core": "1.11.1",
+        "@actions/exec": "1.1.1",
+        "@actions/github": "6.0.0",
+        "neverthrow": "8.2.0",
+        "outdent": "0.8.0",
+        "string-argv": "0.3.2",
+        "zod": "3.24.2"
     },
     "volta": {
         "node": "22.14.0",
