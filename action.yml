@@ -22,8 +22,10 @@ inputs:
         description: Arguments for the rustfmt command
         required: false
     name:
-        description: Display name of the created GitHub check. Must be unique across several LoliGothick/rustfmt-check invocations.
-        default: rustfmt
+        description: >
+            Display name of the created GitHub check.
+            Must be unique across several LoliGothick/rustfmt-check invocations.
+        default: rustfmt-check
     working-directory:
         description: working directory where to execute `cargo fmt`
         default: .
