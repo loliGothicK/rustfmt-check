@@ -20,7 +20,7 @@
         "url": "https://github.com/LoliGothick/rustfmt-check/issues"
     },
     "devDependencies": {
-        "@biomejs/biome": "1.9.4",
+        "@biomejs/biome": "2.0.4",
         "@types/core-js": "2.5.8",
         "@types/node": "22.15.32",
         "@vercel/ncc": "0.38.3",
