@@ -22,7 +22,7 @@
     "devDependencies": {
         "@biomejs/biome": "1.9.4",
         "@types/core-js": "2.5.8",
-        "@types/node": "22.17.1",
+        "@types/node": "22.17.2",
         "@vercel/ncc": "0.38.3",
         "jest": "30.0.5",
         "ts-jest": "^29.2.5",
