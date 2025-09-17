@@ -35,7 +35,7 @@
         "neverthrow": "8.2.0",
         "outdent": "0.8.0",
         "string-argv": "0.3.2",
-        "zod": "4.1.8"
+        "zod": "4.1.9"
     },
     "volta": {
         "node": "22.19.0",
