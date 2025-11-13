@@ -22,7 +22,7 @@
     "devDependencies": {
         "@biomejs/biome": "1.9.4",
         "@types/core-js": "2.5.8",
-        "@types/node": "24.10.0",
+        "@types/node": "24.10.1",
         "@vercel/ncc": "0.38.4",
         "jest": "30.2.0",
         "ts-jest": "^29.2.5",
@@ -38,7 +38,7 @@
         "zod": "4.1.12"
     },
     "volta": {
-        "node": "24.11.0",
+        "node": "24.11.1",
         "yarn": "1.22.22"
     },
     "packageManager": "yarn@1.22.22"
