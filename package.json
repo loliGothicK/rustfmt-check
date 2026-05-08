@@ -24,7 +24,7 @@
         "@types/core-js": "2.5.8",
         "@types/node": "24.12.3",
         "@vercel/ncc": "0.38.4",
-        "jest": "30.4.0",
+        "jest": "30.4.1",
         "ts-jest": "^29.2.5",
         "typescript": "5.9.3"
     },
