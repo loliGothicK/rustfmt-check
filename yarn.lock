@@ -1155,10 +1155,10 @@
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.7.13.tgz#6d2643f810c30c9561bbd8348a2fb4aa0edde4f9"
   integrity sha512-tI0+FTntE3BD0UxhTP12F/iTtkeMK+qh72/2aSxPZnTlOcMR9CTJid8CdppbSjj9wenq7PNcqScLtpPENH3Lvg==
 
-"@vercel/ncc@0.44.0":
-  version "0.44.0"
-  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.44.0.tgz#636984de122de042dc9c2b8ac571237f64958e37"
-  integrity sha512-pHyI+bZokSgIscTKFSmpNk5vZzmOrb9RW0Vu4SRyqUvkJ0kgg3PzaZLLDVTFXhbUiCqg0/Eu8L4fKtgViA92kg==
+"@vercel/ncc@0.44.1":
+  version "0.44.1"
+  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.44.1.tgz#5becc6500a1494e5b9786150da6374d0b2d7671d"
+  integrity sha512-cUjIE5P2YY1n+Kt9rFIazMMpGoPn1Fic04rOmTkElMkiDP5oszGfERMpo2shVkFKDL7rVppdM2pqJKC59shQWQ==
 
 ansi-escapes@^4.3.2:
   version "4.3.2"
