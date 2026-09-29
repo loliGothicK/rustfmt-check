@@ -2603,10 +2603,10 @@ stack-utils@^2.0.6:
   dependencies:
     escape-string-regexp "^2.0.0"
 
-string-argv@0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/string-argv/-/string-argv-0.3.2.tgz#2b6d0ef24b656274d957d54e0a4bbf6153dc02b6"
-  integrity sha512-aqD2Q0144Z+/RqG52NeHEkZauTAUWJO8c6yTftGJKO3Tja5tUgIfmIl6kExvhtxSDP7fXB6DvzkfMpCd/F3G+Q==
+string-argv@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/string-argv/-/string-argv-0.4.0.tgz#773a4a666b6b0925ea5d90e58ce40d5a90bba230"
+  integrity sha512-UOtaksJ3SK3KLHba2i9I27fvuZNfBlImDP5wKsCOxCDMRDNxlipCe8rmnUAaDpqlQ93upnA0SzF2pjWhttozSA==
 
 string-length@^4.0.2:
   version "4.0.2"
