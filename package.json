@@ -38,7 +38,7 @@
         "zod": "4.6.7"
     },
     "volta": {
-        "node": "24.22.1",
+        "node": "24.22.2",
         "yarn": "1.22.22"
     },
     "packageManager": "yarn@1.22.22"
